@@ -17,7 +17,7 @@ class Space:
     def __init__(self, initial_state, final_state):
         self.frontier = None
         self.curr_state = None
-        self.paths = []
+        self.path = []
         self.initial_state = initial_state
         self.final_state = final_state
 

@@ -50,9 +50,6 @@ class Node:
     def get_parent(self):
         return self.parent
 
-    def get_state(self):
-        return self.state
-
     def get_path(self):
         path = [self.state]
         parent = self.parent
@@ -97,6 +94,15 @@ class Space:
             i += 1
         return valid_nodes
 
+    def count_nodes(self):
+        i = 0
+        self.frontier = [Node(self.initial_state)]
+        while self.frontier:
+            self.curr_node = self.frontier.pop()
+            self.frontier.extend(self.curr_node.get_children())
+            i += 1
+        return i
+
 
 if __name__ == '__main__':
     initial_state = [RABBITS.EAST, RABBITS.EAST, RABBITS.EAST, RABBITS.EMPTY, RABBITS.WEST, RABBITS.WEST, RABBITS.WEST]
@@ -104,11 +110,18 @@ if __name__ == '__main__':
     space = Space(initial_state, final_state)
 
     nodes_dfs = space.dfs()
+    print('DFS:')
     print(len(nodes_dfs))
     print(*[[i, len(node.get_path()) - 1, node.get_path()] for node, i in nodes_dfs.items()], sep='\n')
 
     print()
 
-    node_bfs = space.bfs()
-    print(len(node_bfs))
-    print(*[[i, len(node.get_path()) - 1, node.get_path()] for node, i in node_bfs.items()], sep='\n')
+    nodes_bfs = space.bfs()
+    print('BFS:')
+    print(len(nodes_bfs))
+    print(*[[i, len(node.get_path()) - 1, node.get_path()] for node, i in nodes_bfs.items()], sep='\n')
+
+    print()
+    total_search_space = space.count_nodes()
+    print('Total number of nodes:')
+    print(total_search_space)

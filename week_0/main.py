@@ -17,22 +17,38 @@ class Space:
     def __init__(self, initial_state, final_state):
         self.frontier = None
         self.curr_state = None
-        self.path = None
+        self.paths = []
         self.initial_state = initial_state
         self.final_state = final_state
 
-    def is_goal(self):
+    def _is_goal(self):
         return self.curr_state == self.final_state
 
-    def has_path(self, state):
+    def _has_path_dfs(self, state, path=None):
+        if path is None:
+            path = []
+
         self.path.append(state)
 
         self.curr_state = state
-        if self.is_goal():
+        if self._is_goal():
             return True
 
         for child in self._get_children():
-            if self.has_path(child):
+            if self._has_path_dfs(child, path):
+                return True
+
+        self.path.pop()
+        return False
+
+    def _has_path_bfs(self, state):
+        self.path.append(state)
+        self.curr_state = state
+        if self._is_goal():
+            return True
+
+        for child in self._get_children():
+            if self._has_path_bfs(child):
                 return True
 
         self.path.pop()
@@ -41,7 +57,7 @@ class Space:
     def dfs(self):
         self.path = []
         self.curr_state = self.initial_state
-        if not self.has_path(self.initial_state):
+        if not self._has_path_dfs(self.initial_state):
             self.path = None
         return self.path
 
@@ -73,6 +89,6 @@ if __name__ == '__main__':
     final_state = [RABBITS.WEST, RABBITS.WEST, RABBITS.WEST, RABBITS.EMPTY, RABBITS.EAST, RABBITS.EAST, RABBITS.EAST]
     space = Space(initial_state, final_state)
     path = space.dfs()
-    print(f"Number of steps = {len(path)-1}")
+    print(f"Number of steps = {len(path)-1}\n")
     print(*path, sep='\n')
 

@@ -1,7 +1,6 @@
 import enum
 from typing import Union
 
-
 class RABBITS(enum.Enum):
     EMPTY = 0
     EAST = 1
